@@ -13,8 +13,13 @@ namespace sdk {
 static void* g_local_player = nullptr;    // written by onPlayerLoaded / probe
 static void* g_client_instance = nullptr;
 static int   g_svc_off = -1;              // discovered at runtime (Rune: 0x218)
+static void* g_last_level = nullptr; // for the RE console (blk/hit)
+static unsigned long long g_player_loaded_ms = 0;
 
-void set_local_player(void* p) { g_local_player = p; }
+void set_local_player(void* p) {
+    g_local_player = p;
+    g_player_loaded_ms = GetTickCount64();   // grace gate for the block scan
+}
 void* local_player()          { return g_local_player; }
 void set_client_instance(void* ci) { g_client_instance = ci; }
 void* client_instance()       { return g_client_instance; }
@@ -22,6 +27,9 @@ bool local_player_valid() {
     return g_local_player && readable_ptr(g_local_player, 0x400);
 }
 int  svc_off() { return g_svc_off; }
+void set_last_level(void* level) { g_last_level = level; }
+void* last_level() { return g_last_level; }
+unsigned long long player_loaded_ms() { return g_player_loaded_ms; }
 
 // probe-reset for the GUI button
 void reset_player_probe() {

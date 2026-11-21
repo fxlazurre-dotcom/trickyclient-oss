@@ -34,6 +34,19 @@ Signature database + function hooks + nursultan-style in-game GUI with a two-col
   soft fade (no dead-center lock)
 - **AutoSprint** — injects sprint-key taps while walking
 - **Speed / LongJump** — example velocity-write modules
+- **BlockESP** — ore wallhack (coal / iron / copper / gold / redstone / lapis /
+  diamond / emerald / nether, deepslate variants included). Blocks come from a
+  traffic-latched `BlockSource` view (deep-validated against the player's own
+  chunk + feet column through the original `getBlock` trampoline); ores are
+  classified by block NAME with a per-type pointer cache, so id renumbering
+  between point releases cannot break it. Scanning is a column cache: each XZ
+  column is read once full-Y and then frozen — near columns (<=20 blocks)
+  refresh every 45 s to catch mining, far ones cost nothing until you walk up.
+  Rendering uses the engine frame transform captured by the
+  `ScreenView::setupAndRender` hook (view matrix + camera pos + fov): one
+  center transform per box with shared-subexpression corners (~10x cheaper
+  than 8 full matrix multiplies), subpixel and behind-camera skips, and a
+  diagonal-cross LOD for tiny boxes
 
 ### HUD
 

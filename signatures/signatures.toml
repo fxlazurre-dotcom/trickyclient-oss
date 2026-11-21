@@ -385,3 +385,46 @@ pattern = "55 41 57 41 56 56 57 53 48 81 EC ? ? ? ? 48 8D AC 24 ? ? ? ? 48 C7 45
 [AppPlatformGDK_releaseMouse]
 pattern = "56 57 48 83 EC ? 48 89 CE B9 ? ? ? ? FF 15"
 
+
+# BlockSource::getBlock(BlockPos const&) -> Block const* — function rva 0x2D80120;
+# evidence: BDS 1.26.52.3 BlockSource.get_block rva match + disasm confirms the ABI
+# ([rdx+4]=pos.y checked against the int16 bounds at [rcx+0x38]/[rcx+0x3A],
+# [rdx]>>4 and [rdx+8]>>4 = chunk x/z). The anchor sits INSIDE the body on the
+# subchunk hash movabs 0x4EECC44EECC44EC5 and ends on the [.. +0x30] subchunk-table
+# displacement, which separates it from the byte-identical twin at 0x2D80450
+# (the +0x38 data variant). Match starts 144 bytes past the entry: delta = 144.
+[BlockSource_getBlock]
+pattern = "49 B9 C5 4E EC C4 4E EC C4 4E 4C 0F AF C8 49 39 C9 76 3D 48 6B C1 68 48 8B 4C 02 30"
+delta = 144
+
+# Level::getHitResult — function rva 0x117D580; evidence: BDS 1.26.52.3
+# (mov rax,[rcx+0x1E8]; ret — the Level keeps its HitResult* at +0x1E8)
+[Level_getHitResult]
+pattern = "48 8B 81 E8 01 00 00 C3"
+
+# ===== world render pipeline (engine tessellator) — verified 2026-11-21 =====
+# LevelRenderer::renderLevel — rva 0x47F8570; called DIRECTLY (no vtable slot
+# holds it). Hook target: captures the LevelRenderer instance per frame.
+[LevelRenderer_renderLevel]
+pattern = "55 41 57 41 56 41 55 41 54 56 57 53 48 81 EC 48 02 00 00 48 8D AC 24 80 00 00 00 44 0F 29 AD B0 01 00 00 44 0F 29 A5 A0 01 00 00 44 0F 29 9D 90 01 00 00 44 0F 29 95 80 01 00 00 44 0F 29 8D 70 01 00 00 44 0F 29 85 60 01 00 00 0F 29 BD 50 01 00 00 0F 29 B5 40 01 00 00 48 C7 85 38 01 00 00 FE FF FF FF 4D 89 C6 48 89 D6 48 89 CB 48 8B 89 08 04 00 00 48 8B 01 48 8B 80 78 02 00 00"
+
+# Tessellator::begin(this, MaterialPtr const* rdx, byte r8b=1, int r9d=4, byte stack=0)
+# — rva 0x59CA2E0; ABI decoded from live callers (material = arg2)
+[Tessellator_begin]
+pattern = "56 57 55 53 48 83 EC 38 48 8B 05 ?? ?? ?? ?? 48 31 E0 48 89 44 24 30 80"
+
+# Tessellator::color — rva 0x59CA610
+
+# Tessellator::vertex — rva 0x59CA7A0 (54-byte prologue, unique)
+[Tessellator_vertex]
+pattern = "55 41 57 41 56 41 55 41 54 56 57 53 48 81 EC 98 00 00 00 48 8D AC 24 80 00 00 00 44 0F 29 4D 00 44 0F 29 45 F0 0F 29 7D E0 0F 29 75 D0 48 C7 45 C8 FE FF FF FF 0F"
+
+# Tessellator::end(this) — rva 0x59CA520; resets building/special-mode flags
+[Tessellator_end]
+pattern = "56 48 83 EC 20 80 B9 A0 02 00 00 00 0F 85 C7 00 00 00 80 B9 55 02 00 00 00"
+
+# ScreenView::setupAndRender — rva 0x4839060; evidence: Solstice (same 1.26.x
+# family) — its hook is the frame-transform capture point: inside it the
+# ClientInstance view matrix (ci+0x420) matches the frame being built
+[ScreenView_setupAndRender]
+pattern = "55 41 57 41 56 41 55 41 54 56 57 53 B8 ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 29 C4 48 8D AC 24 ?? ?? ?? ?? 44 0F 29 BD ?? ?? ?? ?? 44 0F 29 B5 ?? ?? ?? ?? 44 0F 29 AD ?? ?? ?? ?? 44 0F 29 A5 ?? ?? ?? ?? 44 0F 29 9D ?? ?? ?? ?? 44 0F 29 95 ?? ?? ?? ?? 44 0F 29 8D ?? ?? ?? ?? 44 0F 29 85 ?? ?? ?? ?? 0F 29 BD ?? ?? ?? ?? 0F 29 B5 ?? ?? ?? ?? 48 C7 85 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 95 ?? ?? ?? ?? 48 89 CE"

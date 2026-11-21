@@ -23,6 +23,7 @@ Module& mod_killaura();      Module& mod_autoclicker();   Module& mod_aimassist(
 Module& mod_ticksounds();    Module& mod_hintline();      Module& mod_logfilter();
 Module& mod_logdepth();      Module& mod_copylog();       Module& mod_debuginfo();
 Module& mod_hud_watermark(); Module& mod_hud_arraylist(); Module& mod_hud_info();
+Module& mod_blockesp();               // modules/visual/blockesp.cpp
 void autosprint_worker_start();   // modules/movement/autosprint.cpp
 
 static Module* g_table[] = {
@@ -30,27 +31,38 @@ static Module* g_table[] = {
     &mod_speed(), &mod_longjump(), &mod_autosprint(),
     // COMBAT (listed)
     &mod_killaura(), &mod_autoclicker(), &mod_aimassist(),
+    // VISUAL (3D overlay)
+    &mod_blockesp(),
     // MISC tools (client options; not listed)
     &mod_ticksounds(), &mod_hintline(), &mod_logfilter(), &mod_logdepth(),
     &mod_copylog(), &mod_debuginfo(),
     // HUD elements (not listed)
     &mod_hud_watermark(), &mod_hud_arraylist(), &mod_hud_info(),
 };
-static const char* const g_cats[] = { "COMBAT", "MOVEMENT", "MISC", "HUD" };
+static const char* const g_cats[] = { "COMBAT", "MOVEMENT", "VISUAL", "MISC", "HUD" };
 
 static std::mutex g_mtx;
 static std::atomic<bool> g_dirty{false};
 
 // ---- setting factory helpers (Module) --------------------------------------
+static Setting& mod_slot(Module* m, const char* n) {
+    static Setting spill{};               // guard target — NEVER stored for real use
+    if (m->nsets >= (int)(sizeof(m->sets)/sizeof(m->sets[0]))) {
+        MC_WARN("module %s: setting '%s' dropped (sets[] full)", m->name, n);
+        return spill;
+    }
+    return m->sets[m->nsets++];
+}
+
 Setting& Module::add_bool(const char* n, bool v) {
-    Setting& s = sets[nsets++]; s.kind = Setting::BOOL; s.name = n; s.b = v; return s;
+    Setting& s = mod_slot(this, n); s.kind = Setting::BOOL; s.name = n; s.b = v; return s;
 }
 Setting& Module::add_float(const char* n, float v, float lo, float hi, bool inte, const char* fmt) {
-    Setting& s = sets[nsets++]; s.kind = Setting::FLOAT; s.name = n; s.f = v;
+    Setting& s = mod_slot(this, n); s.kind = Setting::FLOAT; s.name = n; s.f = v;
     s.lo = lo; s.hi = hi; s.inte = inte; s.fmt = fmt; return s;
 }
 Setting& Module::add_enum(const char* n, const char* const* opts, int nopts, int cur) {
-    Setting& s = sets[nsets++]; s.kind = Setting::ENUM; s.name = n;
+    Setting& s = mod_slot(this, n); s.kind = Setting::ENUM; s.name = n;
     s.opts = opts; s.nopts = nopts; s.cur = cur; return s;
 }
 Setting& Module::setting(const char* n) {
@@ -110,6 +122,7 @@ void modules_dispatch_tick(void* level) {
     std::lock_guard<std::mutex> g(g_mtx);        // settings stay stable during the tick
     LevelCtx ctx;
     ctx.level = level;
+    sdk::set_last_level(level);   // RE console diagnostics (blk/hit)
     ctx.player = (uint8_t*)sdk::pick_local_player(level);
     for (int i = 0; i < n; i++) {
         Module* m = all[i];

@@ -6,7 +6,8 @@
 #include "ui/fonts.h"
 #include "ui/renderer/icons.h"
 #include "game/sdk/client/ClientInstance.hpp"   // ci_mouse_grab / platform_grab_block_install
-#include "modules/registry.h"               // modules_hud_any
+#include "modules/registry.h"
+#include "game/sdk/render/LevelRenderer.hpp"               // modules_hud_any
 
 #include <windows.h>
 #include <d3d12.h>
@@ -187,6 +188,11 @@ static bool make_targets() {    DXGI_SWAP_CHAIN_DESC desc;
 static HRESULT STDMETHODCALLTYPE h_Present(IDXGISwapChain* sc, UINT sync, UINT flags) {
     static bool s_init_started = false;
     if (!s_inited && !s_failed && !s_init_started) {
+        // settle delay: the first seconds after injection the game's D3D12
+        // state races its own boot (the documented flaky-boot crash died
+        // right here) — start ImGui only after the storm window
+        static unsigned long long s_boot_ms = GetTickCount64();
+        if (GetTickCount64() - s_boot_ms < 2500) return o_Present(sc, sync, flags);
         // window must be found AND subclassed BEFORE ImGui_ImplWin32_Init
         if (!s_hwnd) {
             s_hwnd = find_game_window();
@@ -365,6 +371,19 @@ static HRESULT STDMETHODCALLTYPE h_Present(IDXGISwapChain* sc, UINT sync, UINT f
         // (guards, render) treats them the same. The closing animation also
         // keeps frames alive for ~0.15s after the menu flag drops.
         bool want_draw = menu_open || hud_on || clickgui_animating();
+        {   // FPS diagnostics: fps + setupAndRender hook rate (5 s cadence)
+            static ULONGLONG s_last = 0;
+            static long s_sar = 0;
+            ULONGLONG now3 = GetTickCount64();
+            if (now3 - s_last >= 5000) {
+                long sar = sdk::render_sar_calls();
+                MC_LOG("diag: fps=%.0f setupAndRender=%.0f/s draw=%d",
+                       ImGui::GetIO().Framerate, (sar - s_sar) * 1000.0f / (float)(now3 - s_last),
+                       (int)want_draw);
+                s_sar = sar;
+                s_last = now3;
+            }
+        }
 
         // crash guards (not GUI): minimized game -> DisplaySize<=0 would assert
         // in NewFrame; alt-tab/fullscreen transitions can swap the buffer set ->

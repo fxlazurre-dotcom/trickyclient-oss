@@ -20,6 +20,9 @@ bool  local_player_valid();          // non-null + readable + sane headroom
 
 // svc offset (StateVectorC* inside the player; discovered at runtime)
 int   svc_off();
+void  set_last_level(void* level);   // reconsole/blk diagnostics
+void* last_level();
+unsigned long long player_loaded_ms();   // world-load timestamp (scan grace)
 void  reset_player_probe();          // GUI/debug: forget and re-discover
 
 // validation (also discovers g_svc_off on first success)

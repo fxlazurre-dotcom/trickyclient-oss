@@ -71,7 +71,7 @@ public:
     bool* toggle_state = nullptr;  // tool rows: toggle a ModuleState bool instead
     void (*action)() = nullptr;    // row click action (CopyLog)
     float hud_x = -1.f, hud_y = -1.f;   // HUD element position (screen px; <0 = anchor)
-    Setting sets[6];
+    Setting sets[16];           // hard cap (guarded by add_* clamps)
     int    nsets = 0;
 
     virtual ~Module() = default;

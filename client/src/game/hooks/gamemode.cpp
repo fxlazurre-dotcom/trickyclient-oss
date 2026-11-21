@@ -9,6 +9,7 @@
 #include "core/state.h"
 #include "core/threadbus.h"
 #include "game/sigs/scan.h"
+#include "game/sdk/world/BlockSource.hpp"
 
 #include <MinHook.h>
 #include <windows.h>
@@ -131,6 +132,7 @@ void invalidate_gm_context() {
     ka_gm = nullptr; ka_gm_off = -1;
     ka_atk_this = nullptr; ka_atk_a3 = nullptr;
     ka_armed = 0;
+    sdk::block_source_invalidate();   // the old dimension's BlockSource is gone too
 }
 
 void* find_gamemode_sub() {

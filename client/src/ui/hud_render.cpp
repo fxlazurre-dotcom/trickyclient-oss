@@ -143,7 +143,8 @@ void draw_hud() {
     int n; Module* const* all = modules_all(&n);
     for (int i = 0; i < n; i++) {
         Module* m = all[i];
-        if (m->enabled && !strcmp(m->category, "HUD"))
+        const char* cat = m->category;
+        if (m->enabled && (!strcmp(cat, "HUD") || !strcmp(cat, "VISUAL")))
             m->on_hud(c);
     }
 }

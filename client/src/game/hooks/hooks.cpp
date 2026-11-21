@@ -7,6 +7,8 @@
 #include "game/sigs/sigs.h"
 #include "game/sdk/world/Level.hpp"
 #include "game/sdk/actor/ecs.hpp"
+#include "game/sdk/world/BlockSource.hpp"
+#include "game/sdk/render/LevelRenderer.hpp"
 #include "core/log.h"
 #include "game/patches.h"
 
@@ -28,6 +30,8 @@ void install_all() {
     if (install_client_hooks()) files_ok++;
     if (install_input_hooks()) files_ok++;
     install_raw_clicker();
+    sdk::install_block_capture();   // dynamic BlockSource discovery (log)
+    sdk::install_render_hook();      // engine world-render pipeline
     MC_LOG("hooks installed (hook-file groups ok: %d/4)", files_ok);
 
     // SDK accessor wiring

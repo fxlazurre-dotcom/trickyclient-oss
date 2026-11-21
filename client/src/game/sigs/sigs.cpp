@@ -24,6 +24,8 @@ void resolve_all_signatures() {
         if (p.parse(SIG_ENTRIES[i].pattern)) {
             bool ok = false;
             r.addr = scan_one(p, r.name.c_str(), &ok);
+            // body-anchored sigs: shift the match back to the function entry
+            r.addr -= SIG_ENTRIES[i].delta;
             r.ok = ok;
         }
         g_sigres.push_back(r);
