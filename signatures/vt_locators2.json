@@ -1,0 +1,26 @@
+{
+ "Level_vtable": {
+  "pattern": "48 8D 05 ?? ?? ?? ?? 48 89 07 48 8D 05 ?? ?? ?? ?? 48 89 47 18 48 8D 05 ?? ?? ?? ?? 48 89 47 20 66",
+  "rel": 3,
+  "desc": "Level base vtable (419 slots)",
+  "result": "#1  offset 0x114e10a  rva 0x114e10a  rel -> rva 0xe7a7aa0 (va 0x14e7a7aa0, offset 0xe7a7aa0)"
+ },
+ "MultiPlayerLevel_vtable": {
+  "pattern": "48 8D 05 ?? ?? ?? ?? 48 89 07 48 8D 05 ?? ?? ?? ?? 48 89 47 18 48 8D 05 ?? ?? ?? ?? 48 89 BD",
+  "rel": 3,
+  "desc": "MultiPlayerLevel vtable",
+  "result": "#1  offset 0x12efe65  rva 0x12efe65  rel -> rva 0xe7adab0 (va 0x14e7adab0, offset 0xe7adab0)"
+ },
+ "ServerLevel_vtable": {
+  "pattern": "48 8D 05 ?? ?? ?? ?? 48 89 01 48 8D 05 ?? ?? ?? ?? 48 89 41 18 48 8D 05 ?? ?? ?? ?? 48 89 41 20 48 83 B9 38 03 00 00 00 75 3B 48 8D 05 9C",
+  "rel": 3,
+  "desc": "ServerLevel vtable",
+  "result": "#1  offset 0x2906dac  rva 0x2906dac  rel -> rva 0xe83b2b0 (va 0x14e83b2b0, offset 0xe83b2b0)"
+ },
+ "GameMode_vtable_alt": {
+  "pattern": "48 8D 05 ?? ?? ?? ?? 48 89 01 48 89 51 08 48 C7",
+  "rel": 3,
+  "desc": "GameMode vtable via ctor lea",
+  "result": "#1  offset 0x2598c80  rva 0x2598c80  rel -> rva 0xe827560 (va 0x14e827560, offset 0xe827560)"
+ }
+}

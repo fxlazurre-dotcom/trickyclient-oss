@@ -1,0 +1,308 @@
+{
+ "GameCore::keyboardEvent": {
+  "rva": "0x98fa0",
+  "size": null,
+  "family": "GameCore",
+  "evidence": "SDK verified",
+  "pattern": "56 57 53 48 83 EC 30 4C 89 C7 48 89 D6 48 8B 05 ?? ?? ?? ?? 48 31 E0 48 89 44 24 28 41 8B 58",
+  "matches": 1,
+  "resolved_rva": "0x0x98fa0"
+ },
+ "Player::setPlayerGameType": {
+  "rva": "0x1e1570",
+  "size": null,
+  "family": "Player",
+  "evidence": "SDK 1.26.60.5 AOB cross-version match",
+  "pattern": "55 41 57 41 56 41 55 41 54 56 57 53 48 81 EC 08 06 00 00 48 8D AC 24 80 00 00 00 48 C7 85 80 05 00 00 FE FF FF FF 41",
+  "matches": 1,
+  "resolved_rva": "0x0x1e1570"
+ },
+ "Keyboard::feed": {
+  "rva": "0x2d18d0",
+  "size": null,
+  "family": "Input",
+  "evidence": "SDK verified",
+  "pattern": "55 41 56 56 57 53 48 83 EC 50 48 8D 6C 24 50 48 C7 45 F8 FE FF FF FF 89 D3 89 CE",
+  "matches": 1,
+  "resolved_rva": "0x0x2d18d0"
+ },
+ "MouseDevice::feed": {
+  "rva": "0x361ad0",
+  "size": null,
+  "family": "Input",
+  "evidence": "SDK verified",
+  "pattern": "41 57 41 56 41 55 41 54 56 57 55 53 48 83 EC 48 44 89 CF 44 89 C3 89 D5 48 89 CE 44",
+  "matches": 1,
+  "resolved_rva": "0x0x361ad0"
+ },
+ "Level::tick": {
+  "rva": "0x1171390",
+  "size": 1085,
+  "family": "Level",
+  "evidence": "vtable slot119 + sourceloc record xref + pdata",
+  "pattern": "55 56 57 53 48 81 EC B8 00 00 00 48 8D AC 24 80 00 00 00 48 C7 45 30 FE FF FF FF 48 89 CF 8B",
+  "matches": 1,
+  "resolved_rva": "0x0x1171390"
+ },
+ "Level::getBiomeManager?": {
+  "rva": "0x117c1b0",
+  "size": 7,
+  "family": "Level",
+  "evidence": "leaf getter near getPlayerList",
+  "pattern": "48 8B 81 D0 00 00 00 C3 CC CC",
+  "matches": 1,
+  "resolved_rva": "0x0x117c1b0"
+ },
+ "Level::getPlayerList": {
+  "rva": "0x117c430",
+  "size": null,
+  "family": "Level",
+  "evidence": "SDK candidate; slot319 leaf getter",
+  "pattern": "48 8B 81 E0 04 00 00 C3 CC CC",
+  "matches": 1,
+  "resolved_rva": "0x0x117c430"
+ },
+ "Level::getRuntimeActorList": {
+  "rva": "0x117c640",
+  "size": null,
+  "family": "Level",
+  "evidence": "SDK verified AOB; slot325",
+  "pattern": "55 41 56 56 57 53 48 83 EC 40 48 8D 6C 24 40 48 C7 45 F8 FE FF FF FF 48 8B B1",
+  "matches": 1,
+  "resolved_rva": "0x0x117c640"
+ },
+ "MultiPlayerLevel::_subTick": {
+  "rva": "0x12f4b70",
+  "size": null,
+  "family": "Level",
+  "evidence": "SDK verified AOB; vt2 slot408",
+  "pattern": "55 56 57 53 48 81 EC D8 00 00 00 48 8D AC 24 80 00 00 00 44 0F 29 6D",
+  "matches": 1,
+  "resolved_rva": "0x0x12f4b70"
+ },
+ "Actor::isPlayer": {
+  "rva": "0x19e9580",
+  "size": null,
+  "family": "Actor",
+  "evidence": "SDK evidence: ActorTypeComponent==319",
+  "pattern": "55 56 57 53 48 81 EC 88 00 00 00 48 8D AC 24 80 00 00 00 48 C7 45 00 FE FF FF FF 48 8B 81 70",
+  "matches": 1,
+  "resolved_rva": "0x0x19e9580"
+ },
+ "Actor::getNameTag": {
+  "rva": "0x1a14ac0",
+  "size": null,
+  "family": "Actor",
+  "evidence": "SDK verified AOB + live hook",
+  "pattern": "56 48 83 EC 20 48 8B 81 28 01 00 00 48 85 C0 74 4A",
+  "matches": 1,
+  "resolved_rva": "0x0x1a14ac0"
+ },
+ "ItemStackBase::getHoverName": {
+  "rva": "0x24901e0",
+  "size": null,
+  "family": "ItemStack",
+  "evidence": "SDK verified",
+  "pattern": "55 41 57 41 56 41 54 56 57 53 48 83 EC 70 48 8D 6C 24 70 48 C7 45 F8 FE FF FF FF 48 89 D6 48 8D 55",
+  "matches": 1,
+  "resolved_rva": "0x0x24901e0"
+ },
+ "GameMode::interact": {
+  "rva": "0x2598f80",
+  "size": null,
+  "family": "GameMode",
+  "evidence": "vtable slot14",
+  "pattern": "55 41 57 41 56 41 55 41 54 56 57 53 48 81 EC 58 06 00 00 48 8D AC 24 80 00 00 00 48 C7 85 D0 05 00 00 FE FF FF FF 44",
+  "matches": 1,
+  "resolved_rva": "0x0x2598f80"
+ },
+ "GameMode::attack": {
+  "rva": "0x2599ca0",
+  "size": 10,
+  "family": "GameMode",
+  "evidence": "vtable slot15 + SDK entry_check",
+  "pattern": "4D 89 C1 41 B0 01 E9",
+  "matches": 1,
+  "resolved_rva": "0x0x2599ca0"
+ },
+ "GameMode::~GameMode(deleting)": {
+  "rva": "0x259a320",
+  "size": null,
+  "family": "GameMode",
+  "evidence": "vtable slot1",
+  "pattern": "41 57 41 56 41 55 41 54 56 57 55 53 48 83 EC 78 4C 89 CB 44",
+  "matches": 1,
+  "resolved_rva": "0x0x259a320"
+ },
+ "GameMode::startDestroyBlock": {
+  "rva": "0x259abb0",
+  "size": null,
+  "family": "GameMode",
+  "evidence": "vtable slot2 + SDK entry_check",
+  "pattern": "55 41 57 41 56 41 55 41 54 56 57 53 48 83 EC 78 48 8D 6C 24 70 48 C7 45 00 FE FF FF FF 44 89 C3 48 89 D7",
+  "matches": 1,
+  "resolved_rva": "0x0x259abb0"
+ },
+ "GameMode::continueDestroyBlock": {
+  "rva": "0x259afd0",
+  "size": null,
+  "family": "GameMode",
+  "evidence": "vtable slot3 + SDK entry_check",
+  "pattern": "55 41 57 41 56 41 55 41 54 56 57 53 48 81 EC D8 00 00 00 48 8D AC 24 80 00 00 00 0F 29 7D 40 0F 29 75 30 48 C7 45 28 FE FF FF FF 4D 89 CF",
+  "matches": 1,
+  "resolved_rva": "0x0x259afd0"
+ },
+ "GameMode::stopDestroyBlock": {
+  "rva": "0x259bbf0",
+  "size": 57,
+  "family": "GameMode",
+  "evidence": "vtable slot4 + SDK entry_check + pdata",
+  "pattern": "56 48 83 EC 20 48 89 CE 48 8B 89 C0 00 00 00 F3",
+  "matches": 1,
+  "resolved_rva": "0x0x259bbf0"
+ },
+ "GameMode::startBuildBlock": {
+  "rva": "0x259bc30",
+  "size": null,
+  "family": "GameMode",
+  "evidence": "vtable slot5",
+  "pattern": "48 83 EC 28 C7 41 40 00 00 00",
+  "matches": 1,
+  "resolved_rva": "0x0x259bc30"
+ },
+ "GameMode::buildBlock": {
+  "rva": "0x259bc60",
+  "size": 1221,
+  "family": "GameMode",
+  "evidence": "vtable slot6 + SDK source_rva + pdata + 3 body anchors",
+  "pattern": "55 41 57 41 56 41 55 41 54 56 57 53 48 81 EC 58 01 00 00 48 8D AC 24 80 00 00 00 48 C7 85 D0 00 00 00 FE FF FF FF 44 89 CB 44",
+  "matches": 1,
+  "resolved_rva": "0x0x259bc60"
+ },
+ "GameMode::stopBuildBlock": {
+  "rva": "0x259cd80",
+  "size": null,
+  "family": "GameMode",
+  "evidence": "vtable slot8",
+  "pattern": "56 48 83 EC 20 48 89 CE 80 79 41",
+  "matches": 1,
+  "resolved_rva": "0x0x259cd80"
+ },
+ "GameMode::useItemOn": {
+  "rva": "0x259d320",
+  "size": null,
+  "family": "GameMode",
+  "evidence": "vtable slot13",
+  "pattern": "55 41 57 41 56 41 55 41 54 56 57 53 48 81 EC 58 05 00 00 48 8D AC 24 80 00 00 00 48 C7 85 D0 04 00 00 FE FF FF FF 4D 89 CF",
+  "matches": 1,
+  "resolved_rva": "0x0x259d320"
+ },
+ "GameMode::useItem": {
+  "rva": "0x259edf0",
+  "size": null,
+  "family": "GameMode",
+  "evidence": "vtable slot11",
+  "pattern": "55 41 57 41 56 41 55 41 54 56 57 53 48 81 EC 38 03 00 00 48 8D AC 24 80 00 00 00 48 C7 85 B0 02 00 00 FE FF FF FF 44",
+  "matches": 1,
+  "resolved_rva": "0x0x259edf0"
+ },
+ "GameMode::useItemAsAttack": {
+  "rva": "0x259f7f0",
+  "size": null,
+  "family": "GameMode",
+  "evidence": "vtable slot12",
+  "pattern": "55 41 57 41 56 41 55 41 54 56 57 53 48 81 EC D8 00 00 00 48 8D AC 24 80 00 00 00 48 C7 45 50 FE FF FF FF 45 89 CF",
+  "matches": 1,
+  "resolved_rva": "0x0x259f7f0"
+ },
+ "GameMode::getPickRange": {
+  "rva": "0x259f9e0",
+  "size": null,
+  "family": "GameMode",
+  "evidence": "vtable slot10, movss PICKRANGE consts",
+  "pattern": "56 57 48 83 EC 28 8B 02 83 F8 01",
+  "matches": 1,
+  "resolved_rva": "0x0x259f9e0"
+ },
+ "GameMode::releaseUsingItem": {
+  "rva": "0x259fb00",
+  "size": null,
+  "family": "GameMode",
+  "evidence": "vtable slot16",
+  "pattern": "55 41 57 41 56 56 57 53 48 81 EC F8 00 00 00 48 8D AC 24 80 00 00 00 48 C7 45 70 FE FF FF FF 48 89 CE 48 8B 49",
+  "matches": 1,
+  "resolved_rva": "0x0x259fb00"
+ },
+ "GameMode::tick": {
+  "rva": "0x259ff50",
+  "size": null,
+  "family": "GameMode",
+  "evidence": "vtable slot9",
+  "pattern": "56 48 83 EC 20 48 89 CE 48 8B 89 B8 00 00 00 48 8B",
+  "matches": 1,
+  "resolved_rva": "0x0x259ff50"
+ },
+ "GameMode::~GameMode(complete)": {
+  "rva": "0x25b3f00",
+  "size": null,
+  "family": "GameMode",
+  "evidence": "vtable slot0",
+  "pattern": "56 57 48 83 EC 28 89 D7 48 89 CE 48 8D 05 ?? ?? ?? ?? 48 89 01 48 8B 89 C0 00 00 00 48 85 C9 74 11",
+  "matches": 1,
+  "resolved_rva": "0x0x25b3f00"
+ },
+ "LevelRendererPlayer::getFov": {
+  "rva": "0x46bd250",
+  "size": null,
+  "family": "Render",
+  "evidence": "SDK verified",
+  "pattern": "56 57 53 48 83 EC 60 44 0F 29 44 24 50 0F 29 7C 24 40 0F 29 74 24 30 44 89 C3 0F",
+  "matches": 1,
+  "resolved_rva": "0x0x46bd250"
+ },
+ "ClientInstance::onCancelJoinGame": {
+  "rva": "0x5da38f0",
+  "size": null,
+  "family": "ClientInstance",
+  "evidence": "SDK candidate, sig matches",
+  "pattern": "56 57 48 83 EC 28 48 89 CE C6 81 D7",
+  "matches": 1,
+  "resolved_rva": "0x0x5da38f0"
+ },
+ "ClientInstance::onDimensionChangedEvent": {
+  "rva": "0x5dbe5d0",
+  "size": null,
+  "family": "ClientInstance",
+  "evidence": "SDK candidate, sig matches",
+  "pattern": "56 48 83 EC 40 48 89 CE 48 8D 91 48",
+  "matches": 1,
+  "resolved_rva": "0x0x5dbe5d0"
+ },
+ "ClientInstance::grabCursor": {
+  "rva": "0x5dce3c0",
+  "size": null,
+  "family": "ClientInstance",
+  "evidence": "SDK verified",
+  "pattern": "56 48 83 EC 20 48 89 CE 48 8B 01 48 8B 80 10 05 00 00 FF 15 ?? ?? ?? ?? 84 C0 74 20 48 8B 8E A8 01 00 00 48 8B 01 48 8B 80 38",
+  "matches": 1,
+  "resolved_rva": "0x0x5dce3c0"
+ },
+ "ClientInstance::releaseCursor": {
+  "rva": "0x5dce410",
+  "size": null,
+  "family": "ClientInstance",
+  "evidence": "SDK verified",
+  "pattern": "56 48 83 EC 20 48 89 CE 48 8B 01 48 8B 80 10 05 00 00 FF 15 ?? ?? ?? ?? 84 C0 74 20 48 8B 8E A8 01 00 00 48 8B 01 48 8B 80 40",
+  "matches": 1,
+  "resolved_rva": "0x0x5dce410"
+ },
+ "ClientInstance::onPlayerLoaded": {
+  "rva": "0x5dd06f0",
+  "size": null,
+  "family": "ClientInstance",
+  "evidence": "SDK candidate, sig matches",
+  "pattern": "49 89 D0 48 89 CA 48 8B 89 A8",
+  "matches": 1,
+  "resolved_rva": "0x0x5dd06f0"
+ }
+}

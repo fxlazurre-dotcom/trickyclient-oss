@@ -1,0 +1,62 @@
+{
+ "fixed": {
+  "GameCore::handleMouseInput": {
+   "pattern": "02 00 00 44 0F 29 95 30 02 00 00 44 0F 29 8D 20 02 00 00 44 0F 29 85 10 02 00 00 0F 29 BD 00 02 00 00 0F 29 B5 F0 01 00 00 48 C7 85 E8 01 00 00 FE FF FF FF 48",
+   "match_rva": "0x8a8c0",
+   "fn_rva": "0x8a880",
+   "anchor_off": 64
+  },
+  "GameMode::registerUpsellScreenCallback": {
+   "pattern": "56 48 83 EC 20 48 8B 4A 38 48 85 C9 74 22 48 39 D1 41 0F 95 C0 48 8B 01 48 8B 40 20 48 89 D6 44 89 C2 FF 15 ?? ?? ?? ?? 48 C7 46 38 00 00 00 00 48",
+   "match_rva": "0xc5370",
+   "fn_rva": "0xc5370",
+   "anchor_off": 0
+  },
+  "Level::_subTick": {
+   "pattern": "55 41 57 41 56 41 55 41 54 56 57 53 48 81 EC B8 02 00 00 48 8D AC 24 80 00 00 00 0F 29 B5 20 02 00 00 48 C7 85 18 02 00 00 FE FF FF FF 48 89 CE 8B",
+   "match_rva": "0x1171880",
+   "fn_rva": "0x1171880",
+   "anchor_off": 0
+  },
+  "ClientLevel::cameraTick": {
+   "pattern": "00 00 48 8D 0D ?? ?? ?? ?? 48 89 4D 18 C6 45 20 00 48 8D 7D 28 48 C7 45 30 00 00 00 00 C6 45 E8 00 4C 8D 45 B0 48 89 FA E8 ?? ?? ?? ?? 88 45 20 48 83",
+   "match_rva": "0x12f6310",
+   "fn_rva": "0x12f62d0",
+   "anchor_off": 64
+  },
+  "GameMode::continueBuildBlock": {
+   "pattern": "55 41 57 41 56 41 55 41 54 56 57 53 48 81 EC 28 01 00 00 48 8D AC 24 80 00 00 00 44 0F 29 85 90 00 00 00 0F 29 BD 80 00 00 00 0F 29 75 70 48 C7 45 68 FE FF FF FF 45",
+   "match_rva": "0x259c540",
+   "fn_rva": "0x259c540",
+   "anchor_off": 0
+  },
+  "GameModeSub::useItemAlternate": {
+   "pattern": "48 83 EC 28 80 B9 C8 00 00 00 01 75 17 80 3D ?? ?? ?? ?? 01 75 0E 31 D2 E8 ?? ?? ?? ?? 31 C0 48 83 C4 28 C3 48 83 C4 28 E9 ?? ?? ?? ?? CC CC CC 55",
+   "match_rva": "0x25a05d0",
+   "fn_rva": "0x25a05d0",
+   "anchor_off": 0
+  },
+  "GameModeSub::~dtor": {
+   "pattern": "56 57 48 83 EC 28 89 D7 48 89 CE 48 8D 05 ?? ?? ?? ?? 48 89 01 48 8B 89 08 01 00 00 48 85 C9 74 25 48 8D 86 D0 00 00 00 48 39 C1 0F 95 C2 48 8B 01 48 8B 40 20 FF 15 ?? ?? ?? ?? 48 C7 86 08 01 00 00 00 00 00 00 48 8D",
+   "match_rva": "0x25b3f70",
+   "fn_rva": "0x25b3f70",
+   "anchor_off": 0
+  }
+ },
+ "vtables": [
+  {
+   "name": "GameMode_vtable",
+   "pattern": "56 57 48 83 EC 28 89 D7 48 89 CE 48 8D 05 ?? ?? ?? ?? 48 89 01 48 8B 89 C0 00 00 00 48 85 C9 74 11",
+   "rel": 14,
+   "desc": "GameMode vtable (419+ slot array base)",
+   "result": "#1  offset 0x25b3f00  rva 0x25b3f00  rel -> rva 0xe827560 (va 0x14e827560, offset 0xe827560)"
+  },
+  {
+   "name": "GameModeSub_vtable",
+   "pattern": "56 57 48 83 EC 28 89 D7 48 89 CE 48 8D 05 ?? ?? ?? ?? 48 89 01 48 8B 89 08 01 00 00 48 85 C9 74 25 48 8D 86 D0 00 00 00 48 39 C1 0F 95 C2 48 8B 01 48 8B 40 20 FF 15 ?? ?? ?? ?? 48 C7 86 08 01 00 00 00 00 00 00 48 8D",
+   "rel": 14,
+   "desc": "client GameMode subclass vtable",
+   "result": "#1  offset 0x25b3f70  rva 0x25b3f70  rel -> rva 0xe827600 (va 0x14e827600, offset 0xe827600)"
+  }
+ ]
+}

@@ -1,0 +1,387 @@
+# Minecraft Bedrock 1.26.52.3 (Windows x64) — ModLoader signature database
+#
+# Target binary : Minecraft.Windows.exe (Store build, MSIXVC-encrypted on disk;
+#                 dumped from memory at image base 0x140000000 via bedrock-on-linux runtime).
+# Dump file     : mc_1265203_dump.bin  (raw memory image; file offset == RVA)
+#                 re-verified 2026-11-21 on a fresh clean-process dump
+#                 (data/mc_dump_1265203_clean.bin): 80/80 unique matches.
+# Verified with : sigtool scan --mapped  (every entry below matches exactly once
+#                 and resolves to the stated RVA in this build)
+# Cross-checks  : BedrockDynamicSDK 1.26.52.3 profile (entry_checks / verified RVAs),
+#                 cross-version AOBs from 1.26.60.5/1.26.65.1 profiles,
+#                 .pdata function bounds, vtable slot analysis, sourceloc records.
+#
+# Notes:
+#  * 'rel = N' entries resolve a rip-relative pointer at match+N (e.g. a vtable).
+#  * GameMode slot map was validated against SDK entry_check bytes for
+#    startDestroyBlock / continueDestroyBlock / stopDestroyBlock / buildBlock / attack.
+#  * stubs (setTrialMode=ret, isInTrialMode=xor-ret) are intentionally not
+#    signaturable — they are shared across the binary.
+
+# ===== GameMode =====
+# GameMode::interact — function rva 0x2598f80; evidence: vtable slot14
+[GameMode_interact]
+pattern = "55 41 57 41 56 41 55 41 54 56 57 53 48 81 EC 58 06 00 00 48 8D AC 24 80 00 00 00 48 C7 85 D0 05 00 00 FE FF FF FF 44"
+
+# GameMode::attack — function rva 0x2599ca0; evidence: vtable slot15 + SDK entry_check
+[GameMode_attack]
+pattern = "4D 89 C1 41 B0 01 E9"
+
+# GameMode::~GameMode(deleting) — function rva 0x259a320; evidence: vtable slot1
+[GameMode_dtor_GameMode_deleting]
+pattern = "41 57 41 56 41 55 41 54 56 57 55 53 48 83 EC 78 4C 89 CB 44"
+
+# GameModeSub::attack — GUARD THUNK, function rva 0x25a0570; evidence: derived
+# GameModeSub vtable slot 15 (rva 0xe827600); guard tail-jumps into the base
+# body at +0x10 — hooking the body start never sees virtual callers.
+[GameModeSub_attack]
+pattern = "4D 89 C1 80 B9 C8 00 00 00 01 75 0C 80 3D ?? ?? ?? ?? 00 74 03 31 C0 C3 41 B0 01 E9"
+
+# GameMode::startDestroyBlock — function rva 0x259abb0; evidence: vtable slot2 + SDK entry_check
+[GameMode_startDestroyBlock]
+pattern = "55 41 57 41 56 41 55 41 54 56 57 53 48 83 EC 78 48 8D 6C 24 70 48 C7 45 00 FE FF FF FF 44 89 C3 48 89 D7"
+
+# GameMode::continueDestroyBlock — function rva 0x259afd0; evidence: vtable slot3 + SDK entry_check
+[GameMode_continueDestroyBlock]
+pattern = "55 41 57 41 56 41 55 41 54 56 57 53 48 81 EC D8 00 00 00 48 8D AC 24 80 00 00 00 0F 29 7D 40 0F 29 75 30 48 C7 45 28 FE FF FF FF 4D 89 CF"
+
+# GameMode::stopDestroyBlock — function rva 0x259bbf0; evidence: vtable slot4 + SDK entry_check + pdata
+[GameMode_stopDestroyBlock]
+pattern = "56 48 83 EC 20 48 89 CE 48 8B 89 C0 00 00 00 F3"
+
+# GameMode::startBuildBlock — function rva 0x259bc30; evidence: vtable slot5
+[GameMode_startBuildBlock]
+pattern = "48 83 EC 28 C7 41 40 00 00 00"
+
+# GameMode::buildBlock — function rva 0x259bc60; evidence: vtable slot6 + SDK source_rva + pdata + 3 body anchors
+[GameMode_buildBlock]
+pattern = "55 41 57 41 56 41 55 41 54 56 57 53 48 81 EC 58 01 00 00 48 8D AC 24 80 00 00 00 48 C7 85 D0 00 00 00 FE FF FF FF 44 89 CB 44"
+
+# GameMode::stopBuildBlock — function rva 0x259cd80; evidence: vtable slot8
+[GameMode_stopBuildBlock]
+pattern = "56 48 83 EC 20 48 89 CE 80 79 41"
+
+# GameMode::useItemOn — function rva 0x259d320; evidence: vtable slot13
+[GameMode_useItemOn]
+pattern = "55 41 57 41 56 41 55 41 54 56 57 53 48 81 EC 58 05 00 00 48 8D AC 24 80 00 00 00 48 C7 85 D0 04 00 00 FE FF FF FF 4D 89 CF"
+
+# GameMode::useItem — function rva 0x259edf0; evidence: vtable slot11
+[GameMode_useItem]
+pattern = "55 41 57 41 56 41 55 41 54 56 57 53 48 81 EC 38 03 00 00 48 8D AC 24 80 00 00 00 48 C7 85 B0 02 00 00 FE FF FF FF 44"
+
+# GameMode::useItemAsAttack — function rva 0x259f7f0; evidence: vtable slot12
+[GameMode_useItemAsAttack]
+pattern = "55 41 57 41 56 41 55 41 54 56 57 53 48 81 EC D8 00 00 00 48 8D AC 24 80 00 00 00 48 C7 45 50 FE FF FF FF 45 89 CF"
+
+# GameMode::getPickRange — function rva 0x259f9e0; evidence: vtable slot10, movss PICKRANGE consts
+[GameMode_getPickRange]
+pattern = "56 57 48 83 EC 28 8B 02 83 F8 01"
+
+# GameMode::releaseUsingItem — function rva 0x259fb00; evidence: vtable slot16
+[GameMode_releaseUsingItem]
+pattern = "55 41 57 41 56 56 57 53 48 81 EC F8 00 00 00 48 8D AC 24 80 00 00 00 48 C7 45 70 FE FF FF FF 48 89 CE 48 8B 49"
+
+# GameMode::tick — function rva 0x259ff50; evidence: vtable slot9
+[GameMode_tick]
+pattern = "56 48 83 EC 20 48 89 CE 48 8B 89 B8 00 00 00 48 8B"
+
+# GameMode::~GameMode(complete) — function rva 0x25b3f00; evidence: vtable slot0
+[GameMode_dtor_GameMode_complete]
+pattern = "56 57 48 83 EC 28 89 D7 48 89 CE 48 8D 05 ?? ?? ?? ?? 48 89 01 48 8B 89 C0 00 00 00 48 85 C9 74 11"
+
+
+# ===== Level =====
+# Level::tick — function rva 0x1171390; evidence: vtable slot119 + sourceloc record xref + pdata
+[Level_tick]
+pattern = "55 56 57 53 48 81 EC B8 00 00 00 48 8D AC 24 80 00 00 00 48 C7 45 30 FE FF FF FF 48 89 CF 8B"
+
+# Level::getBiomeManager? — function rva 0x117c1b0; evidence: leaf getter near getPlayerList
+[Level_getBiomeManager_]
+pattern = "48 8B 81 D0 00 00 00 C3 CC CC"
+
+# Level::getPlayerList — function rva 0x117c430; evidence: SDK candidate; slot319 leaf getter
+[Level_getPlayerList]
+pattern = "48 8B 81 E0 04 00 00 C3 CC CC"
+
+# Level::getRuntimeActorList — function rva 0x117c640; evidence: SDK verified AOB; slot325
+[Level_getRuntimeActorList]
+pattern = "55 41 56 56 57 53 48 83 EC 40 48 8D 6C 24 40 48 C7 45 F8 FE FF FF FF 48 8B B1"
+
+# MultiPlayerLevel::_subTick — function rva 0x12f4b70; evidence: SDK verified AOB; vt2 slot408
+[MultiPlayerLevel__subTick]
+pattern = "55 56 57 53 48 81 EC D8 00 00 00 48 8D AC 24 80 00 00 00 44 0F 29 6D"
+
+
+# ===== Actor =====
+# Actor::isPlayer — function rva 0x19e9580; evidence: SDK evidence: ActorTypeComponent==319
+[Actor_isPlayer]
+pattern = "55 56 57 53 48 81 EC 88 00 00 00 48 8D AC 24 80 00 00 00 48 C7 45 00 FE FF FF FF 48 8B 81 70"
+
+# Actor::getNameTag — function rva 0x1a14ac0; evidence: SDK verified AOB + live hook
+[Actor_getNameTag]
+pattern = "56 48 83 EC 20 48 8B 81 28 01 00 00 48 85 C0 74 4A"
+
+
+# ===== Player =====
+# Player::setPlayerGameType — function rva 0x1e1570; evidence: SDK 1.26.60.5 AOB cross-version match
+[Player_setPlayerGameType]
+pattern = "55 41 57 41 56 41 55 41 54 56 57 53 48 81 EC 08 06 00 00 48 8D AC 24 80 00 00 00 48 C7 85 80 05 00 00 FE FF FF FF 41"
+
+
+# ===== ClientInstance =====
+# ClientInstance::onCancelJoinGame — function rva 0x5da38f0; evidence: SDK candidate, sig matches
+[ClientInstance_onCancelJoinGame]
+pattern = "56 57 48 83 EC 28 48 89 CE C6 81 D7"
+
+# ClientInstance::onDimensionChangedEvent — function rva 0x5dbe5d0; evidence: SDK candidate, sig matches
+[ClientInstance_onDimensionChangedEvent]
+pattern = "56 48 83 EC 40 48 89 CE 48 8D 91 48"
+
+# ClientInstance::grabCursor — function rva 0x5dce3c0; evidence: SDK verified
+[ClientInstance_grabCursor]
+pattern = "56 48 83 EC 20 48 89 CE 48 8B 01 48 8B 80 10 05 00 00 FF 15 ?? ?? ?? ?? 84 C0 74 20 48 8B 8E A8 01 00 00 48 8B 01 48 8B 80 38"
+
+# ClientInstance::releaseCursor — function rva 0x5dce410; evidence: SDK verified
+[ClientInstance_releaseCursor]
+pattern = "56 48 83 EC 20 48 89 CE 48 8B 01 48 8B 80 10 05 00 00 FF 15 ?? ?? ?? ?? 84 C0 74 20 48 8B 8E A8 01 00 00 48 8B 01 48 8B 80 40"
+
+# ClientInstance::onPlayerLoaded — function rva 0x5dd06f0; evidence: SDK candidate, sig matches
+[ClientInstance_onPlayerLoaded]
+pattern = "49 89 D0 48 89 CA 48 8B 89 A8"
+
+
+# ===== GameCore =====
+# GameCore::keyboardEvent — function rva 0x98fa0; evidence: SDK verified
+[GameCore_keyboardEvent]
+pattern = "56 57 53 48 83 EC 30 4C 89 C7 48 89 D6 48 8B 05 ?? ?? ?? ?? 48 31 E0 48 89 44 24 28 41 8B 58"
+
+
+# ===== ItemStack =====
+# ItemStackBase::getHoverName — function rva 0x24901e0; evidence: SDK verified
+[ItemStackBase_getHoverName]
+pattern = "55 41 57 41 56 41 54 56 57 53 48 83 EC 70 48 8D 6C 24 70 48 C7 45 F8 FE FF FF FF 48 89 D6 48 8D 55"
+
+
+# ===== Input =====
+# Keyboard::feed — function rva 0x2d18d0; evidence: SDK verified
+[Keyboard_feed]
+pattern = "55 41 56 56 57 53 48 83 EC 50 48 8D 6C 24 50 48 C7 45 F8 FE FF FF FF 89 D3 89 CE"
+
+# MouseDevice::feed — function rva 0x361ad0; evidence: SDK verified
+[MouseDevice_feed]
+pattern = "41 57 41 56 41 55 41 54 56 57 55 53 48 83 EC 48 44 89 CF 44 89 C3 89 D5 48 89 CE 44"
+
+
+# ===== Render =====
+# LevelRendererPlayer::getFov — function rva 0x46bd250; evidence: SDK verified
+[LevelRendererPlayer_getFov]
+pattern = "56 57 53 48 83 EC 60 44 0F 29 44 24 50 0F 29 7C 24 40 0F 29 74 24 30 44 89 C3 0F"
+
+
+# ===== FIXED =====
+# GameCore::handleMouseInput — function rva 0x8a880; evidence: retry pass: body anchor, body anchor (match inside fn)
+[GameCore_handleMouseInput]
+pattern = "02 00 00 44 0F 29 95 30 02 00 00 44 0F 29 8D 20 02 00 00 44 0F 29 85 10 02 00 00 0F 29 BD 00 02 00 00 0F 29 B5 F0 01 00 00 48 C7 85 E8 01 00 00 FE FF FF FF 48"
+
+# GameMode::registerUpsellScreenCallback — function rva 0xc5370; evidence: retry pass: body anchor
+[GameMode_registerUpsellScreenCallback]
+pattern = "56 48 83 EC 20 48 8B 4A 38 48 85 C9 74 22 48 39 D1 41 0F 95 C0 48 8B 01 48 8B 40 20 48 89 D6 44 89 C2 FF 15 ?? ?? ?? ?? 48 C7 46 38 00 00 00 00 48"
+
+# Level::_subTick — function rva 0x1171880; evidence: retry pass: body anchor
+[Level__subTick]
+pattern = "55 41 57 41 56 41 55 41 54 56 57 53 48 81 EC B8 02 00 00 48 8D AC 24 80 00 00 00 0F 29 B5 20 02 00 00 48 C7 85 18 02 00 00 FE FF FF FF 48 89 CE 8B"
+
+# ClientLevel::cameraTick — function rva 0x12f62d0; evidence: retry pass: body anchor, body anchor (match inside fn)
+[ClientLevel_cameraTick]
+pattern = "00 00 48 8D 0D ?? ?? ?? ?? 48 89 4D 18 C6 45 20 00 48 8D 7D 28 48 C7 45 30 00 00 00 00 C6 45 E8 00 4C 8D 45 B0 48 89 FA E8 ?? ?? ?? ?? 88 45 20 48 83"
+
+# GameMode::continueBuildBlock — function rva 0x259c540; evidence: retry pass: body anchor
+[GameMode_continueBuildBlock]
+pattern = "55 41 57 41 56 41 55 41 54 56 57 53 48 81 EC 28 01 00 00 48 8D AC 24 80 00 00 00 44 0F 29 85 90 00 00 00 0F 29 BD 80 00 00 00 0F 29 75 70 48 C7 45 68 FE FF FF FF 45"
+
+# GameModeSub::useItemAlternate — function rva 0x25a05d0; evidence: retry pass: body anchor
+[GameModeSub_useItemAlternate]
+pattern = "48 83 EC 28 80 B9 C8 00 00 00 01 75 17 80 3D ?? ?? ?? ?? 01 75 0E 31 D2 E8 ?? ?? ?? ?? 31 C0 48 83 C4 28 C3 48 83 C4 28 E9 ?? ?? ?? ?? CC CC CC 55"
+
+# GameModeSub::~dtor — function rva 0x25b3f70; evidence: retry pass: body anchor
+[GameModeSub_dtor_dtor]
+pattern = "56 57 48 83 EC 28 89 D7 48 89 CE 48 8D 05 ?? ?? ?? ?? 48 89 01 48 8B 89 08 01 00 00 48 85 C9 74 25 48 8D 86 D0 00 00 00 48 39 C1 0F 95 C2 48 8B 01 48 8B 40 20 FF 15 ?? ?? ?? ?? 48 C7 86 08 01 00 00 00 00 00 00 48 8D"
+
+
+# ===== vtable locators (resolve the vtable address at runtime) =====
+# Level_vtable — Level base vtable (419 slots); rva
+[Level_vtable]
+pattern = "48 8D 05 ?? ?? ?? ?? 48 89 07 48 8D 05 ?? ?? ?? ?? 48 89 47 18 48 8D 05 ?? ?? ?? ?? 48 89 47 20 66"
+rel = 3
+
+# MultiPlayerLevel_vtable — MultiPlayerLevel vtable; rva
+[MultiPlayerLevel_vtable]
+pattern = "48 8D 05 ?? ?? ?? ?? 48 89 07 48 8D 05 ?? ?? ?? ?? 48 89 47 18 48 8D 05 ?? ?? ?? ?? 48 89 BD"
+rel = 3
+
+# ServerLevel_vtable — ServerLevel vtable; rva
+[ServerLevel_vtable]
+pattern = "48 8D 05 ?? ?? ?? ?? 48 89 01 48 8D 05 ?? ?? ?? ?? 48 89 41 18 48 8D 05 ?? ?? ?? ?? 48 89 41 20 48 83 B9 38 03 00 00 00 75 3B 48 8D 05 9C"
+rel = 3
+
+# GameMode_vtable_alt — GameMode vtable via ctor lea; rva
+[GameMode_vtable_alt]
+pattern = "48 8D 05 ?? ?? ?? ?? 48 89 01 48 89 51 08 48 C7"
+rel = 3
+
+# GameMode_vtable — GameMode vtable (419+ slot array base)
+[GameMode_vtable]
+pattern = "56 57 48 83 EC 28 89 D7 48 89 CE 48 8D 05 ?? ?? ?? ?? 48 89 01 48 8B 89 C0 00 00 00 48 85 C9 74 11"
+rel = 14
+
+# GameModeSub_vtable — client GameMode subclass vtable
+[GameModeSub_vtable]
+pattern = "56 57 48 83 EC 28 89 D7 48 89 CE 48 8D 05 ?? ?? ?? ?? 48 89 01 48 8B 89 08 01 00 00 48 85 C9 74 25 48 8D 86 D0 00 00 00 48 39 C1 0F 95 C2 48 8B 01 48 8B 40 20 FF 15 ?? ?? ?? ?? 48 C7 86 08 01 00 00 00 00 00 00 48 8D"
+rel = 14
+
+# Dimension::tick — function rva 0x230acb0 (size 0x1aed); sourceloc record xref + pdata; body anchor +0x0
+[Dimension_tick]
+pattern = "55 41 57 41 56 41 55 41 54 56 57 53 48 81 EC F8 01 00 00 48 8D AC 24 80 00 00 00 0F 29 BD 60 01 00 00 0F 29 B5 50 01 00 00 48 C7 85 48 01 00 00 FE FF FF FF 48 89 CE 48 8B 81"
+
+# ServerLevel::_subTick — function rva 0x290c020 (vt3 slot408); sourceloc record xref + pdata + vtable
+[ServerLevel_subTick]
+pattern = "55 41 57 41 56 41 54 56 57 53 48 81 EC 00 01 00 00 48 8D AC 24 80 00 00 00 48 C7 45 78 FE FF FF FF 48 89 CF 8B"
+
+# ===== Client-side movement validation (anticheat) — 1.26.52.3 =====
+# Patches are applied at ModLoader startup AFTER module decryption.
+# Primary: field validator stub + correction tick no-op.
+
+# AC_PlayerAuthInput_field_validator — rva 0x3c8ba90, patch "B0 01 C3"
+# mov al,1; ret — PlayerAuthInputPayload::mPos/mMove/mPosDelta/mRot/mRawMoveVector/mAnalogMoveVector NaN+range validation always passes. Pure read-only validator.
+[AC_PlayerAuthInput_field_validator]
+pattern = "56 57 48 83 EC 38 48 8B 05 ?? ?? ?? ?? 48 31 E0 48 89 44 24 30 B8"
+
+# AC_TickServerPlayerMovementCorrection — rva 0x67f0a10, patch "C3"
+# ret — ECS system tick (70KB): server-auth movement correction replay. No tick = no corrections.
+[AC_TickServerPlayerMovementCorrection]
+pattern = "55 41 57 41 56 41 55 41 54 56 57 53 48 81 EC B8 09 00 00 48 8D AC 24 80 00 00 00 0F 29 B5 20 09 00 00 48 C7 85 18 09 00 00 FE FF FF FF 4C"
+
+# AC_CheckPlayerPassengerMovementStats — rva 0x6835490, patch "C3"
+# ret — passenger movement stats check system.
+[AC_CheckPlayerPassengerMovementStats]
+pattern = "55 41 57 41 56 41 55 41 54 56 57 53 B8 68 1C"
+
+# AC_PlayerMovementStatsEventSystem — rva 0x68228d0, patch "C3"
+# ret — player movement stats event system (movement flagging telemetry).
+[AC_PlayerMovementStatsEventSystem]
+pattern = "55 41 57 41 56 41 55 41 54 56 57 53 B8 A8 18"
+
+# AC_PlayerAuthInput_inputbit_validator — rva 0x3d70ad0, signature only
+# signature only — validates PlayerAuthInputData bits ('duplicate input data bit'). Also deserializes: DO NOT stub blindly.
+[AC_PlayerAuthInput_inputbit_validator]
+pattern = "55 41 57 41 56 41 55 41 54 56 57 53 48 81 EC 08 01 00 00 48 8D AC 24 80 00 00 00 48 C7 85 80 00 00 00 FE FF FF FF 4C 89 4D D0 4C"
+
+# AC_PlayerAuthInput_blockaction_validator — rva 0x3ccb590, signature only
+# signature only — validates block actions ('unsupported player block action type'). Also deserializes: DO NOT stub blindly.
+[AC_PlayerAuthInput_blockaction_validator]
+pattern = "04 00 00 48 83 7D E0 00 0F 85 C1 00 00 00 8B 05 64 54"
+
+# AC_PacketViolationReporter — rva 0x40f5700, signature only
+# signature only — common violation reporter (builds PacketViolationWarning data).
+[AC_PacketViolationReporter]
+pattern = "55 41 57 41 56 41 55 41 54 56 57 53 48 83 EC 68 48 8D 6C 24 60 48 C7 45 00 FE FF FF FF 4D 89 C4 89"
+
+
+# ===== ECS accessors for runtime modules (rotation/position) =====
+# ActorRotationComponent getYaw(wrapper{reg@0x10,id@0x18})
+[Actor_getYaw]
+pattern = "56 48 83 EC 20 48 8B 41 10 8B 71 18"
+
+# StateVectorComponent getter(w,w{reg@8,id@0x10})
+[Actor_getStateVector]
+pattern = "56 57 48 83 EC 28 48 89 CE 48 8B 4A 08 8B 7A 10 BA 38"
+
+
+# ClientReplayStatePolicy vtable (ctor lea @0x259ff89); slot2 = isReplayNeeded
+[ClientReplayStatePolicy_vtable]
+pattern = "48 8D 05 ?? ?? ?? ?? 48 89 02 48 89 52 38 C6"
+rel = 3
+
+# MovementCorrectionInterpolationSystem tick (client correction applier) — rva 0x31e7630
+[MC_InterpolationSystem_tick]
+pattern = "55 A8 48 89 55 40 BA 20 00 00 00 41 FF D0 48 85 C0 0F 84 ?? ?? ?? ?? 48 89 45 B0 48 C7 45 C0 1D 00 00 00 48 C7 45 C8 1F 00 00 00 0F 10 05 ?? ?? ?? ?? 0F 11 40 0D 0F 10 05 ?? ?? ?? ?? 0F 11 00 C6 40 1D 00 C7 45 D0 97"
+
+# MovementCorrectionPredictionSyncPacketSystem tick — rva 0x31e9730
+[MC_PredictionSync_tick]
+pattern = "55 A8 48 89 55 10 BA 20 00 00 00 41 FF D0 48 85 C0 0F 84 ?? ?? ?? ?? 48 89 45 B0 48 C7 45 C0 1D 00 00 00 48 C7 45 C8 1F 00 00 00 0F 10 05 ?? ?? ?? ?? 0F 11 40 0D 0F 10 05 ?? ?? ?? ?? 0F 11 00 C6 40 1D 00 C7 45 D0 97"
+
+# client movement-correction systems registration — rva 0x31c5b50
+[MC_systems_registration]
+pattern = "55 41 57 41 56 41 55 41 54 56 57 53 48 81 EC 98 04 00 00 48 8D AC 24 80 00 00 00 0F 29 B5 00 04 00 00 48 C7 85 F8 03 00 00 FE FF FF FF 49 89 CC 48 8B"
+
+# MinecraftPackets::createPacket(PacketID)->shared_ptr<Packet> — rva 0x16ad560 (Rune sig, cross-version)
+[MinecraftPackets_createPacket]
+pattern = "56 48 83 EC 20 48 89 CE 81 FA 61 01"
+
+
+# ===== Ported from RuneClient 1.26.20 sig table — verified unique on 1.26.52.3 =====
+# BreakingProgress -> rva 0x259b6b3 (Rune port)
+[BreakingProgress]
+pattern = "F3 0F 11 7E 24 48"
+
+# Timer -> rva 0x4732537 (Rune port)
+[Timer]
+pattern = "F3 0F 10 16 F3 0F 10 4E 0C F3 0F 11"
+
+# TimeChanger -> rva 0xe4fdd1 (Rune port)
+[TimeChanger]
+pattern = "8B 81 40 03 00 00 C3"
+
+# Hitbox -> rva 0x1a0ae67 (Rune port)
+[Hitbox]
+pattern = "F3 0F 10 40 18 C3 CC CC CC 0F"
+
+# FastBow -> rva 0x1edf58 (Rune port)
+[FastBow]
+pattern = "42 8B 44 01 08"
+
+# Options_getPerspective -> rva 0xfb7430 (Rune port)
+[Options_getPerspective]
+pattern = "48 83 EC 38 48 8B 05 ? ? ? ? 48 31 E0 48 89 44 24 ? 48 8B 01 48 8B 40 08 48 8D 54 24 ? 41 B8 03 00 00 00"
+
+# Options_getHideHand -> rva 0xfb7020 (Rune port)
+[Options_getHideHand]
+pattern = "48 83 EC 38 48 8B 05 ? ? ? ? 48 31 E0 48 89 44 24 ? 48 8B 01 48 8B 40 08 48 8D 54 24 ? 41 B8 AA 01 00 00"
+
+# ChatScreenController_sendChatMessage -> rva 0x2630ef0 (Rune port)
+[ChatScreenController_sendChatMessage]
+pattern = "55 41 57 41 56 41 54 56 57 53 48 81 EC ? ? ? ? 48 8D AC 24 ? ? ? ? 48 C7 85 ? ? ? ? ? ? ? ? 48 89 D7 48 89 CE 48 83 79"
+
+# GpuInfo -> rva 0xdf776f1 (Rune port)
+[GpuInfo]
+pattern = "48 8D 0D ? ? ? ? 4C 8D 44 24 ? BA ? ? ? ? 41 B9 ? ? ? ? E8 ? ? ? ? 48 C7 05"
+
+# ItemStackBase_getDamageValue -> rva 0x2487770 (Rune port)
+[ItemStackBase_getDamageValue]
+pattern = "56 57 48 83 EC ? 48 8B 05 ? ? ? ? 48 31 E0 48 89 44 24 ? 48 8B 41 ? 48 85 C0 74 ? 48 83 38"
+
+# Tessellator_color -> rva 0x59ca610 (Rune port)
+[Tessellator_color]
+pattern = "80 B9 ? ? ? ? ? 0F 85 ? ? ? ? F3 0F 10 05 ? ? ? ? F3 0F 10 0A"
+
+# Dimension_getSkyColor -> rva 0x2308050 (Rune port)
+[Dimension_getSkyColor]
+pattern = "48 89 D0 41 0F 10 00 0F 11 02 F3 0F 10 05"
+
+# GuiData_displayClientMessage -> rva 0x155eea0 (Rune port)
+[GuiData_displayClientMessage]
+pattern = "55 56 53 48 81 EC ? ? ? ? 48 8D AC 24 ? ? ? ? 48 C7 85 ? ? ? ? ? ? ? ? 44 88 CB"
+
+# BaseActorRenderer_renderText -> rva 0x46ba3bf (Rune port)
+[BaseActorRenderer_renderText]
+pattern = "E8 ? ? ? ? 49 81 C7 ? ? ? ? 4D 39 E7 75 ? 48 83 C4"
+rel = 1
+
+# MinecraftGame_onDeviceLost -> rva 0x8035b0 (Rune port)
+[MinecraftGame_onDeviceLost]
+pattern = "55 41 57 41 56 56 57 53 48 81 EC ? ? ? ? 48 8D AC 24 ? ? ? ? 48 C7 45 ? ? ? ? ? 48 89 CF 48 8D B1 ? ? ? ? 48 8B 81"
+
+# AppPlatformGDK_releaseMouse -> rva 0x92e20 (Rune port)
+[AppPlatformGDK_releaseMouse]
+pattern = "56 57 48 83 EC ? 48 89 CE B9 ? ? ? ? FF 15"
+
